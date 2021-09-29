@@ -1,6 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
+from settings import loadGames
 
 class ScoreEntryTab(Frame):
     def __init__(self, parent):
@@ -22,7 +23,7 @@ class ScoreEntryTab(Frame):
 
         verify_intcmd = (self.register(self.validate_int), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
         
-        choices = ["Hunt: Showdown"]
+        choices = loadGames()
         self.game = StringVar(self)
         self.game.set("Hunt: Showdown")
         self.game_widget = OptionMenu(self, self.game, *choices)

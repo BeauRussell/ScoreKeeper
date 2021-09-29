@@ -4,7 +4,7 @@ base = None
 
 executables = [Executable("scorekeeper.py", base=base)]
 
-packages = ["tkinter", "scoreEntryTab"]
+packages = ["tkinter", "scoreEntryTab", "settingsTab", "pyyaml"]
 options = {
     'build_exe': {    
         'packages':packages,

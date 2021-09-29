@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import ttk
 
 from scoreEntryTab import *
+from settingsTab import *
 
 class ScoreKeeper(Tk):
     def __init__(self):
@@ -12,7 +13,7 @@ class ScoreKeeper(Tk):
         notebook = ttk.Notebook(self, height=300, width=500)
 
         score_entry_frame = ScoreEntryTab(notebook)
-        settings_frame = Frame(notebook)
+        settings_frame = SettingsTab(notebook)
         score_entry_frame.pack(fill="both", expand=1)
         settings_frame.pack(fill="both", expand=1)
 
