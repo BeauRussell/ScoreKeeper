@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from settings import saveSettings, loadGames
+from data import saveSettings, loadGames
 
 class SettingsTab(Frame):
     def __init__(self, parent):

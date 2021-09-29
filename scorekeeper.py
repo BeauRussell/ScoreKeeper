@@ -3,9 +3,13 @@ from tkinter import ttk
 
 from scoreEntryTab import *
 from settingsTab import *
+from data import checkAndCreateGameDirectory
 
 class ScoreKeeper(Tk):
     def __init__(self):
+        # Create games directory if it does not exist
+        checkAndCreateGameDirectory()
+
         Tk.__init__(self)
         self.geometry("500x275")
         self.title("ScoreKeeper")

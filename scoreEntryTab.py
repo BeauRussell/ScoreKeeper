@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from settings import loadGames
+from data import loadGames, checkForOrCreateSpecificGameDirectory
 
 class ScoreEntryTab(Frame):
     def __init__(self, parent):
@@ -112,7 +112,7 @@ class ScoreEntryTab(Frame):
     
     def on_save(self):
         data = {
-            'game': ''.join( e for e in self.game.get() if e.isalnum()),
+            'game': self.game.get(),
             'team': self.team_name_entry.get(),
             'season': self.season_number.get(),
             'custom1': {'name': self.custom_score_name_1.get(), 'value': self.custom_score_value_1.get()},
@@ -121,6 +121,8 @@ class ScoreEntryTab(Frame):
             'custom4': {'name': self.custom_score_name_4.get(), 'value': self.custom_score_value_4.get()},
             'custom5': {'name': self.custom_score_name_5.get(), 'value': self.custom_score_value_5.get()}
         }
+
+        checkForOrCreateSpecificGameDirectory(data["game"])
         print(data)
 
     
