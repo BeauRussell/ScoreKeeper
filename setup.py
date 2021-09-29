@@ -4,7 +4,7 @@ base = None
 
 executables = [Executable("scorekeeper.py", base=base)]
 
-packages = ["idna", "tkinter"]
+packages = ["tkinter", "scoreEntryTab"]
 options = {
     'build_exe': {    
         'packages':packages,
@@ -14,7 +14,7 @@ options = {
 setup(
     name = "ScoreKeeper",
     options = options,
-    version = "0.01",
+    version = "0.02",
     description = 'A program to keep scores throughout a season.',
     executables = executables
 )
