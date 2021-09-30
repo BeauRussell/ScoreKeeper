@@ -28,7 +28,7 @@ class ScoreEntryTab(Frame):
             choices = ['-- No Games Set Up --']
 
         self.game = StringVar(self)
-        self.game.set("Hunt: Showdown")
+        self.game.set(choices[0])
         self.game_widget = OptionMenu(self, self.game, *choices)
 
         self.season_label = Label(self, text="Season #:")

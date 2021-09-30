@@ -22,7 +22,7 @@ class SettingsTab(Frame):
         games_saved = loadGames()
         if games_saved:
             games_saved = ", ".join(games_saved)
-        self.game_list.insert(END, games_saved)
+            self.game_list.insert(END, games_saved)
 
         self.game_title.grid(column=0, row=0)
         self.game_list.grid(column=0, row=1, columnspan=2)

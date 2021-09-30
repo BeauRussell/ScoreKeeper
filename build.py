@@ -4,7 +4,7 @@ base = "Win32GUI"
 
 executables = [Executable("scorekeeper.py", base=base)]
 
-packages = ["tkinter", "scoreEntryTab", "settingsTab", "yaml"]
+packages = ["tkinter", "scoreEntryTab", "settingsTab", "yaml", "os"]
 options = {
     'build_exe': {    
         'packages':packages,
