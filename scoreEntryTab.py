@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from data import loadGames, checkForOrCreateSpecificGameDirectory
+from data import loadGames, checkForOrCreateSpecificGameDirectory, checkForOrCreateSeasonDirectory
 
 class ScoreEntryTab(Frame):
     def __init__(self, parent):
@@ -24,6 +24,9 @@ class ScoreEntryTab(Frame):
         verify_intcmd = (self.register(self.validate_int), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
         
         choices = loadGames()
+        if not choices:
+            choices = ['-- No Games Set Up --']
+
         self.game = StringVar(self)
         self.game.set("Hunt: Showdown")
         self.game_widget = OptionMenu(self, self.game, *choices)
@@ -122,7 +125,8 @@ class ScoreEntryTab(Frame):
             'custom5': {'name': self.custom_score_name_5.get(), 'value': self.custom_score_value_5.get()}
         }
 
-        checkForOrCreateSpecificGameDirectory(data["game"])
+        path = checkForOrCreateSpecificGameDirectory(data["game"])
+        path = checkForOrCreateSeasonDirectory(path, data["season"])
         print(data)
 
     

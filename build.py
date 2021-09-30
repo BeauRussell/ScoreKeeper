@@ -1,10 +1,10 @@
 from cx_Freeze import setup, Executable
 
-base = None    
+base = "Win32GUI"    
 
 executables = [Executable("scorekeeper.py", base=base)]
 
-packages = ["tkinter", "scoreEntryTab", "settingsTab", "pyyaml"]
+packages = ["tkinter", "scoreEntryTab", "settingsTab", "yaml"]
 options = {
     'build_exe': {    
         'packages':packages,
@@ -14,7 +14,7 @@ options = {
 setup(
     name = "ScoreKeeper",
     options = options,
-    version = "0.02",
+    version = "0.1",
     description = 'A program to keep scores throughout a season.',
     executables = executables
 )

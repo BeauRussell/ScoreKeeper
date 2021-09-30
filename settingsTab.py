@@ -19,8 +19,10 @@ class SettingsTab(Frame):
     def build_games_input(self):
         self.game_title = Label(self, text="List of Games (Separated by Commas)")
         self.game_list = Text(self, width=25, height=5)
-        games = ", ".join(loadGames())
-        self.game_list.insert(END, games)
+        games_saved = loadGames()
+        if games_saved:
+            games_saved = ", ".join(games_saved)
+        self.game_list.insert(END, games_saved)
 
         self.game_title.grid(column=0, row=0)
         self.game_list.grid(column=0, row=1, columnspan=2)
