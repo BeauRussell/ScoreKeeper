@@ -4,17 +4,19 @@ base = "Win32GUI"
 
 executables = [Executable("scorekeeper.py", base=base)]
 
-packages = ["tkinter", "scoreEntryTab", "settingsTab", "yaml", "os"]
+includeFiles = ['images/refresh.png']
+packages = ["tkinter", "yaml", "os", "PIL"]
 options = {
     'build_exe': {    
         'packages':packages,
+        'include_files': includeFiles
     },    
 }
 
 setup(
     name = "ScoreKeeper",
     options = options,
-    version = "0.1",
+    version = "0.2",
     description = 'A program to keep scores throughout a season.',
     executables = executables
 )

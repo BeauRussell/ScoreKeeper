@@ -11,10 +11,10 @@ class ScoreKeeper(Tk):
         checkOrCreateRequiredFiles()
 
         Tk.__init__(self)
-        self.geometry("500x275")
+        self.geometry("600x275")
         self.title("ScoreKeeper")
 
-        notebook = ttk.Notebook(self, height=300, width=500)
+        notebook = ttk.Notebook(self, height=300, width=550)
 
         score_entry_frame = ScoreEntryTab(notebook)
         settings_frame = SettingsTab(notebook)

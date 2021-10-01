@@ -22,6 +22,15 @@ def loadGames():
             return False
 
 
+def loadTeams():
+    with open(r'./settings.yml') as file:
+        load = yaml.load(file, Loader=yaml.FullLoader)
+        if not load is None and "teams" in load:
+            return load['teams']
+        else:
+            return False
+
+
 def checkOrCreateRequiredFiles():
     if not os.path.exists('./games'):
         os.makedirs('./games')

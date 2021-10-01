@@ -1,7 +1,8 @@
 from tkinter import *
 from tkinter import ttk
+from PIL import Image, ImageTk
 
-from data import loadGames, checkForOrCreateSpecificGameDirectory, checkForOrCreateSeasonDirectory
+from data import loadGames, loadTeams, checkForOrCreateSpecificGameDirectory, checkForOrCreateSeasonDirectory
 
 class ScoreEntryTab(Frame):
     def __init__(self, parent):
@@ -10,6 +11,8 @@ class ScoreEntryTab(Frame):
         
         
     def build_widgets(self):
+        refresh = Image.open("refresh.png").resize((20, 20))
+        self.refresh_image = ImageTk.PhotoImage(refresh)
         self.build_game_input()
 
         self.build_score_inputs()
@@ -20,6 +23,9 @@ class ScoreEntryTab(Frame):
 
     def build_game_input(self):
         self.game_title = Label(self, text="Game")
+
+        # Set up Button to Reset the Game Menu
+        self.update_games_button = Button(self, image=self.refresh_image, command=self.resetGameMenu, height=20, width=20)
 
         verify_intcmd = (self.register(self.validate_int), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
         
@@ -32,19 +38,31 @@ class ScoreEntryTab(Frame):
         self.game_widget = OptionMenu(self, self.game, *choices)
 
         self.season_label = Label(self, text="Season #:")
-        self.season_number = Entry(self, width="2")
+        self.season_number = Entry(self, width="1")
         self.season_number.insert(0, "Kills")
         self.season_number = Entry(self, validate = 'key', validatecommand = verify_intcmd)
 
         self.game_title.grid(row=0,column=0)
         self.game_widget.grid(row=0,column=1)
-        self.season_label.grid(row=0,column=2)
-        self.season_number.grid(row=0,column=3)
+        self.update_games_button.grid (row=0, column=2)
+        self.season_label.grid(row=0,column=3)
+        self.season_number.grid(row=0,column=4)
 
     
     def build_score_inputs(self):
         self.team_name_label = Label(self, text="Team Name")
-        self.team_name_entry = Entry(self, width="32", justify="center")
+
+        # Pull Team names from settings
+        choices = loadTeams()
+        if not choices:
+            choices = ['-- No Teams Set Up --']
+
+        self.team = StringVar(self)
+        self.team.set(choices[0])
+        self.team_widget = OptionMenu(self, self.team, *choices)
+
+        # Set up Button to Reset the Game Menu
+        self.update_teams_button = Button(self, image=self.refresh_image, command=self.resetTeamMenu, height=20, width=20)
 
         verify_intcmd = (self.register(self.validate_int), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
@@ -80,7 +98,8 @@ class ScoreEntryTab(Frame):
 
         # Team name entry placement
         self.team_name_label.grid(row=1,column=0, pady=10)
-        self.team_name_entry.grid(row=1,column=1, columnspan=2)
+        self.team_widget.grid(row=1,column=1)
+        self.update_teams_button.grid(row=1,column=2)
 
         # Custom Scores Headers placement
         self.custom_scores_label.grid(row=2,column=0)
@@ -116,7 +135,7 @@ class ScoreEntryTab(Frame):
     def on_save(self):
         data = {
             'game': self.game.get(),
-            'team': self.team_name_entry.get(),
+            'team': self.team_widget.get(),
             'season': self.season_number.get(),
             'custom1': {'name': self.custom_score_name_1.get(), 'value': self.custom_score_value_1.get()},
             'custom2': {'name': self.custom_score_name_2.get(), 'value': self.custom_score_value_2.get()},
@@ -139,3 +158,17 @@ class ScoreEntryTab(Frame):
                 return False
         else:
             return False
+
+
+    def resetGameMenu(self):
+        menu = self.game_widget["menu"]
+        menu.delete(0, "end")
+        for game in loadGames():
+            menu.add_command(label=game, command=lambda value=game: self.om_variable.set(value))
+
+
+    def resetTeamMenu(self):
+        menu = self.team_widget["menu"]
+        menu.delete(0, "end")
+        for team in loadTeams():
+            menu.add_command(label=team, command=lambda value=team: self.om_variable.set(value))

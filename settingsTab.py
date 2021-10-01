@@ -1,7 +1,7 @@
 from tkinter import *
 from tkinter import ttk
 
-from data import saveSettings, loadGames
+from data import saveSettings, loadGames, checkForOrCreateSpecificGameDirectory, loadTeams
 
 class SettingsTab(Frame):
     def __init__(self, parent):
@@ -11,6 +11,7 @@ class SettingsTab(Frame):
         
     def build_widgets(self):
         self.build_games_input()
+        self.build_teams_input()
 
         self.submit_button = Button(self, text="Update", command=self.on_save)
         self.submit_button.grid (row=50, column=2, pady=10)
@@ -24,19 +25,38 @@ class SettingsTab(Frame):
             games_saved = ", ".join(games_saved)
             self.game_list.insert(END, games_saved)
 
-        self.game_title.grid(column=0, row=0)
-        self.game_list.grid(column=0, row=1, columnspan=2)
+        self.game_title.grid(column=0, row=0, padx=10)
+        self.game_list.grid(column=0, row=1, columnspan=2, padx=10)
+
+    def build_teams_input(self):
+        self.teams_title = Label(self, text="List of Teams (Separated by Commas)")
+        self.teams_list = Text(self, width=25, height=5)
+        teams_saved = loadTeams()
+        if teams_saved:
+            teams_saved = ", ".join(teams_saved)
+            self.teams_list.insert(END, teams_saved)
+
+        self.teams_title.grid(column=2, row=0)
+        self.teams_list.grid(column=2, row=1, columnspan=2)
 
     
     def on_save(self):
         data = {
-            "games": []
+            "games": [],
+            "teams": []
         }
         games = self.game_list.get("1.0", END).split(",")
         for game in games:
             name = game.strip()
             name = name.strip('\n')
             data["games"].append(name)
+            checkForOrCreateSpecificGameDirectory(game)
+
+        teams = self.teams_list.get("1.0", END).split(",")
+        for team in teams:
+            name = team.strip()
+            name = name.strip('\n')
+            data["teams"].append(name)
 
         saveSettings(data)
 
