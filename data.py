@@ -1,14 +1,14 @@
 import yaml
 import os
 
-def saveSettings(data):
+def saveSettings(data, path=""):
     with open(r'./settings.yml', 'w') as file:
         yaml.dump(data, file)
 
 
 def saveGameSettings(game, data):
     path = checkForOrCreateSpecificGameDirectory(game)
-    path = path + 'settings.yml'
+    path = path + '/settings.yml'
     with open(path, 'w') as file:
         yaml.dump(data, file)
 
@@ -53,3 +53,11 @@ def checkForOrCreateSeasonDirectory(path, season):
         os.makedirs(path)
 
     return path
+
+
+def getGameRules(game):
+    path = checkForOrCreateSpecificGameDirectory(game)
+    path = path + '/settings.yml'
+    with open(path) as file:
+        load = yaml.load(file, Loader=yaml.FullLoader)
+        return load
