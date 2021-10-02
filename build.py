@@ -16,7 +16,7 @@ options = {
 setup(
     name = "ScoreKeeper",
     options = options,
-    version = "0.3",
+    version = "1.0",
     description = 'A program to keep scores throughout a season.',
     executables = executables
 )

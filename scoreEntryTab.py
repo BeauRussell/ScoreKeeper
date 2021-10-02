@@ -35,7 +35,7 @@ class ScoreEntryTab(Frame):
 
         self.game = StringVar(self)
         self.game.set(choices[0])
-        self.game_widget = OptionMenu(self, self.game, *choices)
+        self.game_widget = OptionMenu(self, self.game, *choices, command=self.reloadScoreWidgets)
 
         self.season_label = Label(self, text="Season #:")
         self.season_number = Entry(self, validate = 'key', validatecommand = verify_intcmd, width="2")
@@ -157,3 +157,12 @@ class ScoreEntryTab(Frame):
         menu.delete(0, "end")
         for team in loadTeams():
             menu.add_command(label=team, command=lambda value=team: self.team.set(value))
+
+
+    def reloadScoreWidgets(self, *args):
+        rules = getGameRules(self.game.get())
+        self.custom_score_name_1['text'] = rules["custom1"]["name"]
+        self.custom_score_name_2['text'] = rules["custom2"]["name"]
+        self.custom_score_name_3['text'] = rules["custom3"]["name"]
+        self.custom_score_name_4['text'] = rules["custom4"]["name"]
+        self.custom_score_name_5['text'] = rules["custom5"]["name"]

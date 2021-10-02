@@ -35,7 +35,7 @@ class GameSettingsTab(Frame):
 
         self.game = StringVar(self)
         self.game.set(choices[0])
-        self.game_widget = OptionMenu(self, self.game, *choices)
+        self.game_widget = OptionMenu(self, self.game, *choices, command=self.reloadScoreWidgets)
 
         self.game_title.grid(row=0,column=0)
         self.game_widget.grid(row=0,column=1)
@@ -43,7 +43,6 @@ class GameSettingsTab(Frame):
 
     
     def build_score_inputs(self):
-        verify_intcmd = (self.register(self.validate_int), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
         rules = getGameRules(self.game.get())
 
@@ -54,31 +53,31 @@ class GameSettingsTab(Frame):
         self.custom_score_label_1 = Label(self, text="Score #1")
         self.custom_score_name_1 = Entry(self)
         self.custom_score_name_1.insert(0, rules["custom1"]["name"] if rules else "N/A")
-        self.custom_score_value_1 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
+        self.custom_score_value_1 = Entry(self, validate = 'key')
         self.custom_score_value_1.insert(0, rules["custom1"]["value"] if rules else "N/A")
 
         self.custom_score_label_2 = Label(self, text="Score #2")
         self.custom_score_name_2 = Entry(self)
         self.custom_score_name_2.insert(0, rules["custom2"]["name"] if rules else "N/A")
-        self.custom_score_value_2 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
+        self.custom_score_value_2 = Entry(self, validate = 'key')
         self.custom_score_value_2.insert(0, rules["custom2"]["value"] if rules else "N/A")
 
         self.custom_score_label_3 = Label(self, text="Score #3")
         self.custom_score_name_3 = Entry(self)
         self.custom_score_name_3.insert(0, rules["custom3"]["name"] if rules else "N/A")
-        self.custom_score_value_3 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
+        self.custom_score_value_3 = Entry(self, validate = 'key')
         self.custom_score_value_3.insert(0, rules["custom3"]["value"] if rules else "N/A")
 
         self.custom_score_label_4 = Label(self, text="Score #4")
         self.custom_score_name_4 = Entry(self)
         self.custom_score_name_4.insert(0, rules["custom4"]["name"] if rules else "N/A")
-        self.custom_score_value_4 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
+        self.custom_score_value_4 = Entry(self, validate = 'key')
         self.custom_score_value_4.insert(0, rules["custom4"]["value"] if rules else "N/A")
 
         self.custom_score_label_5 = Label(self, text="Score #5")
         self.custom_score_name_5 = Entry(self)
         self.custom_score_name_5.insert(0, rules["custom5"]["name"] if rules else "N/A")
-        self.custom_score_value_5 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
+        self.custom_score_value_5 = Entry(self, validate = 'key')
         self.custom_score_value_5.insert(0, rules["custom5"]["value"] if rules else "N/A")
 
         # Custom Scores Headers placement
@@ -140,3 +139,32 @@ class GameSettingsTab(Frame):
         menu.delete(0, "end")
         for game in loadGames():
             menu.add_command(label=game, command=lambda value=game: self.game.set(value))
+
+    def reloadScoreWidgets(self, *args):
+        rules = getGameRules(self.game.get())
+
+        # reload names
+        self.custom_score_name_1.delete(0, 'end')
+        self.custom_score_name_2.delete(0, 'end')
+        self.custom_score_name_3.delete(0, 'end')
+        self.custom_score_name_4.delete(0, 'end')
+        self.custom_score_name_5.delete(0, 'end')
+
+        self.custom_score_name_1.insert(0, rules["custom1"]["name"] if rules else "N/A")
+        self.custom_score_name_2.insert(0, rules["custom2"]["name"] if rules else "N/A")
+        self.custom_score_name_3.insert(0, rules["custom3"]["name"] if rules else "N/A")
+        self.custom_score_name_4.insert(0, rules["custom4"]["name"] if rules else "N/A")
+        self.custom_score_name_5.insert(0, rules["custom5"]["name"] if rules else "N/A")
+
+        # reload values
+        self.custom_score_value_1.delete(0, 'end')
+        self.custom_score_value_2.delete(0, 'end')
+        self.custom_score_value_3.delete(0, 'end')
+        self.custom_score_value_4.delete(0, 'end')
+        self.custom_score_value_5.delete(0, 'end')
+        
+        self.custom_score_value_1.insert(0, rules["custom1"]["value"] if rules else "N/A")
+        self.custom_score_value_2.insert(0, rules["custom2"]["value"] if rules else "N/A")
+        self.custom_score_value_3.insert(0, rules["custom3"]["value"] if rules else "N/A")
+        self.custom_score_value_4.insert(0, rules["custom4"]["value"] if rules else "N/A")
+        self.custom_score_value_5.insert(0, rules["custom5"]["value"] if rules else "N/A")

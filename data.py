@@ -101,7 +101,7 @@ def processPoints(path):
 
     totals = []
     for team in scores:
-        totals.append([team, calculatePoints(scores[team], settings)])
+        totals.append([team, calculatePoints(scores[team], settings), len(scores[team])])
         
     leaderboard = sorted(totals,key=lambda l:l[1], reverse=True)
     with open(leaderboard_file, 'w+') as file:
