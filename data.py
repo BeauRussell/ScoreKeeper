@@ -68,16 +68,56 @@ def getGameRules(game):
 
 
 def saveScore(path, team, scores):
-    path = path + '/scores.yml'
-    if not os.path.exists(path):
-        open(path, 'w+').close()
+    scores_file = path + '/scores.yml'
+    if not os.path.exists(scores_file):
+        open(scores_file, 'w+').close()
     
-    with open(path, 'w+') as file:
+    with open(scores_file, 'r+') as file:
         load = yaml.load(file, Loader=yaml.FullLoader)
         if not load:
             load = {}
+
         if not team in load:
             load[team] = []
-        
         load[team].append(scores)
         yaml.dump(load, file)
+    
+    processPoints(path)
+
+
+def processPoints(path):
+    scores_file = path + '/scores.yml'
+    leaderboard_file = path + '/leaderboard.yml'
+    settings_file = path + '/../settings.yml'
+
+    if not os.path.exists(leaderboard_file):
+        open(leaderboard_file, 'w+').close()
+    
+    with open(scores_file, 'r') as file:
+        scores = yaml.load(file, Loader=yaml.FullLoader)
+    
+    with open(settings_file, 'r') as file:
+        settings = yaml.load(file, Loader=yaml.FullLoader)
+
+    totals = []
+    for team in scores:
+        totals.append([team, calculatePoints(scores[team], settings)])
+        
+    leaderboard = sorted(totals,key=lambda l:l[1], reverse=True)
+    with open(leaderboard_file, 'w+') as file:
+        yaml.dump(leaderboard, file)
+
+
+
+def calculatePoints(scores, settings):
+    points = 0
+    for game in scores:
+        for index, score in enumerate(game):
+            custom_num = index + 1
+            if settings["custom" + str(custom_num)]["name"] == 'N/A':
+                continue
+
+            multiplier = int(settings["custom" + str(custom_num)]["value"])
+            points = points + (multiplier * int(score))
+    
+    return points
