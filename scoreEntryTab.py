@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter import ttk
 from PIL import Image, ImageTk
 
-from data import loadGames, loadTeams, checkForOrCreateSpecificGameDirectory, checkForOrCreateSeasonDirectory
+from data import loadGames, loadTeams, checkForOrCreateSpecificGameDirectory, checkForOrCreateSeasonDirectory, getGameRules, saveScore
 
 class ScoreEntryTab(Frame):
     def __init__(self, parent):
@@ -65,29 +65,30 @@ class ScoreEntryTab(Frame):
 
         verify_intcmd = (self.register(self.validate_int), '%d', '%i', '%P', '%s', '%S', '%v', '%V', '%W')
 
+        rules = getGameRules(self.game.get())
+
         self.custom_scores_label = Label(self, text="Custom Scores")
         self.custom_scores_key_label = Label(self, text="Score Key")
-        self.custom_scores_value_label = Label(self, text="Score Value")
+        self.custom_scores_value_label = Label(self, text="Score Point Value")
 
         self.custom_score_label_1 = Label(self, text="Score #1")
-        self.custom_score_name_1 = Entry(self)
-        self.custom_score_name_1.insert(0, "Kills")
+        self.custom_score_name_1 = Label(self, text = rules["custom1"]["name"] if rules else "N/A")
         self.custom_score_value_1 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
 
         self.custom_score_label_2 = Label(self, text="Score #2")
-        self.custom_score_name_2 = Entry(self)
+        self.custom_score_name_2 = Label(self, text = rules["custom2"]["name"] if rules else "N/A")
         self.custom_score_value_2 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
 
-        self.custom_score_label_3 = Label(self, text="Score #3")
-        self.custom_score_name_3 = Entry(self)
+        self.custom_score_label_3 = Label(self, text = "Score #3")
+        self.custom_score_name_3 = Label(self, text = rules["custom3"]["name"] if rules else "N/A")
         self.custom_score_value_3 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
 
         self.custom_score_label_4 = Label(self, text="Score #4")
-        self.custom_score_name_4 = Entry(self)
+        self.custom_score_name_4 = Label(self, text = rules["custom4"]["name"] if rules else "N/A")
         self.custom_score_value_4 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
 
         self.custom_score_label_5 = Label(self, text="Score #5")
-        self.custom_score_name_5 = Entry(self)
+        self.custom_score_name_5 = Label(self, text = rules["custom5"]["name"] if rules else "N/A")
         self.custom_score_value_5 = Entry(self, validate = 'key', validatecommand = verify_intcmd)
 
         # Team name entry placement
@@ -127,20 +128,10 @@ class ScoreEntryTab(Frame):
 
     
     def on_save(self):
-        data = {
-            'game': self.game.get(),
-            'team': self.team_widget.get(),
-            'season': self.season_number.get(),
-            'custom1': {'name': self.custom_score_name_1.get(), 'value': self.custom_score_value_1.get()},
-            'custom2': {'name': self.custom_score_name_2.get(), 'value': self.custom_score_value_2.get()},
-            'custom3': {'name': self.custom_score_name_3.get(), 'value': self.custom_score_value_3.get()},
-            'custom4': {'name': self.custom_score_name_4.get(), 'value': self.custom_score_value_4.get()},
-            'custom5': {'name': self.custom_score_name_5.get(), 'value': self.custom_score_value_5.get()}
-        }
-
-        path = checkForOrCreateSpecificGameDirectory(data["game"])
-        path = checkForOrCreateSeasonDirectory(path, data["season"])
-        print(data)
+        path = checkForOrCreateSpecificGameDirectory(self.game.get())
+        path = checkForOrCreateSeasonDirectory(path, self.season_number.get())
+        scores = [self.custom_score_value_1.get(), self.custom_score_value_2.get(), self.custom_score_value_3.get(), self.custom_score_value_4.get(), self.custom_score_value_4.get()]
+        saveScore(path, self.team.get(), scores)
 
     
     def validate_int(self, action, index, value_if_allowed, prior_value, text, validation_type, trigger_type, widget_name):
@@ -158,11 +149,11 @@ class ScoreEntryTab(Frame):
         menu = self.game_widget["menu"]
         menu.delete(0, "end")
         for game in loadGames():
-            menu.add_command(label=game, command=lambda value=game: self.om_variable.set(value))
+            menu.add_command(label=game, command=lambda value=game: self.game.set(value))
 
 
     def resetTeamMenu(self):
         menu = self.team_widget["menu"]
         menu.delete(0, "end")
         for team in loadTeams():
-            menu.add_command(label=team, command=lambda value=team: self.om_variable.set(value))
+            menu.add_command(label=team, command=lambda value=team: self.team.set(value))

@@ -58,6 +58,26 @@ def checkForOrCreateSeasonDirectory(path, season):
 def getGameRules(game):
     path = checkForOrCreateSpecificGameDirectory(game)
     path = path + '/settings.yml'
+
+    if not os.path.exists(path):
+        return False
+    
     with open(path) as file:
         load = yaml.load(file, Loader=yaml.FullLoader)
         return load
+
+
+def saveScore(path, team, scores):
+    path = path + '/scores.yml'
+    if not os.path.exists(path):
+        open(path, 'w+').close()
+    
+    with open(path, 'w+') as file:
+        load = yaml.load(file, Loader=yaml.FullLoader)
+        if not load:
+            load = {}
+        if not team in load:
+            load[team] = []
+        
+        load[team].append(scores)
+        yaml.dump(load, file)
