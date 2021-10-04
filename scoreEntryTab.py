@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 from PIL import Image, ImageTk
 
 from data import loadGames, loadTeams, checkForOrCreateSpecificGameDirectory, checkForOrCreateSeasonDirectory, getGameRules, saveScore
@@ -130,7 +129,7 @@ class ScoreEntryTab(Frame):
     def on_save(self):
         path = checkForOrCreateSpecificGameDirectory(self.game.get())
         path = checkForOrCreateSeasonDirectory(path, self.season_number.get())
-        scores = [self.custom_score_value_1.get(), self.custom_score_value_2.get(), self.custom_score_value_3.get(), self.custom_score_value_4.get(), self.custom_score_value_4.get()]
+        scores = [self.custom_score_value_1.get(), self.custom_score_value_2.get(), self.custom_score_value_3.get(), self.custom_score_value_4.get(), self.custom_score_value_5.get()]
         saveScore(path, self.team.get(), scores)
 
     

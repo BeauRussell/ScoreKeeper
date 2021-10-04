@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 from PIL import Image, ImageTk
 
 from data import loadGames, saveGameSettings, getGameRules
@@ -37,14 +36,24 @@ class GameSettingsTab(Frame):
         self.game.set(choices[0])
         self.game_widget = OptionMenu(self, self.game, *choices, command=self.reloadScoreWidgets)
 
+        
+
         self.game_title.grid(row=0,column=0)
         self.game_widget.grid(row=0,column=1)
         self.update_games_button.grid (row=0, column=2)
+
+        
 
     
     def build_score_inputs(self):
 
         rules = getGameRules(self.game.get())
+
+        self.points_type_title = Label(self, text="Method of Point Awarding")
+        points_type_choices = ['Points for Actions', 'Points for Ranking']
+        self.points_type = StringVar(self)
+        self.points_type.set(rules["pointsMethod"] if rules else points_type_choices[0])
+        self.points_type_widget = OptionMenu(self, self.points_type, *points_type_choices, command=self.reloadScoreWidgets)
 
         self.custom_scores_label = Label(self, text="Custom Scores")
         self.custom_scores_key_label = Label(self, text="Score Key")
@@ -79,6 +88,10 @@ class GameSettingsTab(Frame):
         self.custom_score_name_5.insert(0, rules["custom5"]["name"] if rules else "N/A")
         self.custom_score_value_5 = Entry(self, validate = 'key')
         self.custom_score_value_5.insert(0, rules["custom5"]["value"] if rules else "N/A")
+
+        # Point Format Selection placement
+        self.points_type_title.grid(row=1,column=0)
+        self.points_type_widget.grid(row=1,column=1)
 
         # Custom Scores Headers placement
         self.custom_scores_label.grid(row=2,column=0)
@@ -117,7 +130,8 @@ class GameSettingsTab(Frame):
             'custom2': {'name': self.custom_score_name_2.get(), 'value': self.custom_score_value_2.get()},
             'custom3': {'name': self.custom_score_name_3.get(), 'value': self.custom_score_value_3.get()},
             'custom4': {'name': self.custom_score_name_4.get(), 'value': self.custom_score_value_4.get()},
-            'custom5': {'name': self.custom_score_name_5.get(), 'value': self.custom_score_value_5.get()}
+            'custom5': {'name': self.custom_score_name_5.get(), 'value': self.custom_score_value_5.get()},
+            'pointsMethod': self.points_type.get()
         }
         
         saveGameSettings(self.game.get(), data)
@@ -143,13 +157,21 @@ class GameSettingsTab(Frame):
     def reloadScoreWidgets(self, *args):
         rules = getGameRules(self.game.get())
 
-        # reload names
-        self.custom_score_name_1.delete(0, 'end')
-        self.custom_score_name_2.delete(0, 'end')
-        self.custom_score_name_3.delete(0, 'end')
-        self.custom_score_name_4.delete(0, 'end')
-        self.custom_score_name_5.delete(0, 'end')
+        self.clearCustomScores() 
+        
+        if self.points_type.get() == 'Points for Ranking':
+            self.custom_scores_key_label.destroy()
+            self.custom_scores_key_label = Label(self, text="Rankings (i.e. 1 or 1-3)")
+        elif self.points_type.get() == 'Points for Actions':
+            self.custom_scores_key_label.destroy()
+            self.custom_scores_key_label = Label(self, text="Score Key")
 
+        self.custom_scores_key_label.grid(row=2,column=1)
+
+        if not rules or not self.points_type.get() == rules["pointsMethod"]:
+            return
+
+        # reload names
         self.custom_score_name_1.insert(0, rules["custom1"]["name"] if rules else "N/A")
         self.custom_score_name_2.insert(0, rules["custom2"]["name"] if rules else "N/A")
         self.custom_score_name_3.insert(0, rules["custom3"]["name"] if rules else "N/A")
@@ -157,14 +179,21 @@ class GameSettingsTab(Frame):
         self.custom_score_name_5.insert(0, rules["custom5"]["name"] if rules else "N/A")
 
         # reload values
-        self.custom_score_value_1.delete(0, 'end')
-        self.custom_score_value_2.delete(0, 'end')
-        self.custom_score_value_3.delete(0, 'end')
-        self.custom_score_value_4.delete(0, 'end')
-        self.custom_score_value_5.delete(0, 'end')
-        
         self.custom_score_value_1.insert(0, rules["custom1"]["value"] if rules else "N/A")
         self.custom_score_value_2.insert(0, rules["custom2"]["value"] if rules else "N/A")
         self.custom_score_value_3.insert(0, rules["custom3"]["value"] if rules else "N/A")
         self.custom_score_value_4.insert(0, rules["custom4"]["value"] if rules else "N/A")
         self.custom_score_value_5.insert(0, rules["custom5"]["value"] if rules else "N/A")
+
+    def clearCustomScores(self):
+        self.custom_score_name_1.delete(0, 'end')
+        self.custom_score_name_2.delete(0, 'end')
+        self.custom_score_name_3.delete(0, 'end')
+        self.custom_score_name_4.delete(0, 'end')
+        self.custom_score_name_5.delete(0, 'end')
+
+        self.custom_score_value_1.delete(0, 'end')
+        self.custom_score_value_2.delete(0, 'end')
+        self.custom_score_value_3.delete(0, 'end')
+        self.custom_score_value_4.delete(0, 'end')
+        self.custom_score_value_5.delete(0, 'end')

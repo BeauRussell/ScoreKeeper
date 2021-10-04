@@ -1,5 +1,4 @@
 from tkinter import *
-from tkinter import ttk
 
 from data import saveSettings, loadGames, checkForOrCreateSpecificGameDirectory, loadTeams
 

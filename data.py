@@ -101,7 +101,10 @@ def processPoints(path):
 
     totals = []
     for team in scores:
-        totals.append([team, calculatePoints(scores[team], settings), len(scores[team])])
+        if settings["pointsMethod"] == 'Points for Actions':
+            totals.append([team, calculatePointsFromActions(scores[team], settings), len(scores[team])])
+        elif settings["pointsMethod"] == 'Points for Rankings':
+            totals.append([team, calculatePointsFromRankings(scores[team], settings), len(scores[team])])
         
     leaderboard = sorted(totals,key=lambda l:l[1], reverse=True)
     with open(leaderboard_file, 'w+') as file:
@@ -109,12 +112,25 @@ def processPoints(path):
 
 
 
-def calculatePoints(scores, settings):
+def calculatePointsFromActions(scores, settings):
     points = 0
     for game in scores:
         for index, score in enumerate(game):
             custom_num = index + 1
-            if settings["custom" + str(custom_num)]["name"] == 'N/A':
+            if settings["custom" + str(custom_num)]["name"] == 'N/A' or settings["custom" + str(custom_num)]["name"] == '':
+                continue
+
+            multiplier = int(settings["custom" + str(custom_num)]["value"])
+            points = points + (multiplier * int(score))
+    
+    return points
+
+def calculatePointsFromRankings(scores, settings):
+    points = 0
+    for game in scores:
+        for index, score in enumerate(game):
+            custom_num = index + 1
+            if settings["custom" + str(custom_num)]["name"] == 'N/A' or settings["custom" + str(custom_num)]["name"] == '':
                 continue
 
             multiplier = int(settings["custom" + str(custom_num)]["value"])

@@ -5,7 +5,7 @@ base = "Win32GUI"
 executables = [Executable("scorekeeper.py", base=base)]
 
 includeFiles = ['refresh.png']
-packages = ["tkinter", "yaml", "os", "PIL"]
+packages = ["tkinter", "yaml", "os", "PIL", "licensing"]
 options = {
     'build_exe': {    
         'packages':packages,

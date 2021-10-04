@@ -5,11 +5,14 @@ from scoreEntryTab import *
 from settingsTab import *
 from gameSettingsTab import *
 from data import checkOrCreateRequiredFiles
+from licensing import getAuthenticated
 
 class ScoreKeeper(Tk):
     def __init__(self):
         # Create games directory if it does not exist
         checkOrCreateRequiredFiles()
+
+        getAuthenticated()
 
         Tk.__init__(self)
         self.geometry("500x275")
